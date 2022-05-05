@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/Class-Organizer/static/css/main.073c9b0a.css",
+    "main.js": "/Class-Organizer/static/js/main.beb47017.js",
+    "static/media/logo.svg": "/Class-Organizer/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/Class-Organizer/index.html",
+    "main.073c9b0a.css.map": "/Class-Organizer/static/css/main.073c9b0a.css.map",
+    "main.beb47017.js.map": "/Class-Organizer/static/js/main.beb47017.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.beb47017.js"
+  ]
+}
