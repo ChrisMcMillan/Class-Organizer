@@ -7,6 +7,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
+import { timeToString, capitalizeFirstLetter } from './utility';
+
 class AddClass extends React.Component {
     constructor(props) {
         super(props);
@@ -14,16 +16,19 @@ class AddClass extends React.Component {
           name: "",
           days: {monday: false, tuesday: false, wednesday: false,
             thursday: false, friday: false, saturday: false, sunday: false},
-          times: {start: {hour: 1, min: 0}, end: {hour: 1, min: 0}}
+          times: {start: {hour: 1, min: 0}, end: {hour: 1, min: 0}},
+          startID: "Start",
+          endID: "End"
         };
 
         this.handleDayCheckBoxChange = this.handleDayCheckBoxChange.bind(this);
         this.handleClassNameChange = this.handleClassNameChange.bind(this);
+        this.handleClassTimeChange = this.handleClassTimeChange.bind(this);
       }
 
-      capitalizeFirstLetter(string) {
+      /* capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
-      }
+      } */
       
       handleDayCheckBoxChange(event) {
        
@@ -45,6 +50,94 @@ class AddClass extends React.Component {
         this.setState({ name:  event.target.value});
       }
 
+      handleClassTimeChange(event){
+        console.log(event);
+      }
+
+
+      hourToString(hour){
+
+        if(hour < 1 || hour > 24){
+          console.error("Invalid hour passed into hourToString()");
+          return null;
+        }
+
+        let hourString = "";
+        let mid = 12;
+
+        if(hour > mid) hourString = hour - mid;
+        else hourString = hour;
+
+        if(hour <= mid) hourString += " AM";
+        else hourString += " PM";
+
+        return hourString;
+      }
+
+      createHourInput(id){
+        
+        let inputID = id + "HourInput";
+        let tit = "Hour";
+        let maxTime = 24;
+        let dropDownSelection = [];
+
+        {/* <Form.Select aria-label="Default select example">
+                  <option>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </Form.Select> */}
+
+        for(let i = 1; i <= maxTime; i++){
+            let item  = <option value={i} key={i}>{this.hourToString(i)}</option>;
+            dropDownSelection.push(item);
+        }
+        
+        let input = <Form.Select aria-label="Default select example"  className='my-3' id={inputID} title={tit}>
+            {dropDownSelection}
+        </Form.Select>;
+
+        return input;
+      }
+
+      createMinInput(id){
+        
+        let inputID = id + "MinInput";
+        let tit = "Min";
+        let maxTime = 55;
+        let dropDownSelection = [];
+
+        for(let i = 0; i <= maxTime; i += 5){
+            let num = null;
+            if(i < 10) num = "0" + i;
+            else num = i;
+
+            let item  = <option value={i} key={i}>{num}</option>;
+            dropDownSelection.push(item);
+        }
+        
+        let input = <Form.Select aria-label="Default select example" className='my-3' id={inputID} title={tit}>
+            {dropDownSelection}
+        </Form.Select>;
+
+        return input;
+      }
+
+      createTimeInput(id){
+
+
+        let a = <div className='my-3'>
+          <Form.Label>{id} Time</Form.Label>
+          <Row>
+            <Col>{this.createHourInput(id)}</Col>
+            <Col>{this.createMinInput(id)}</Col>
+          </Row>
+                    
+        </div>;
+
+        return a;
+      }
+
       render(){
 
         
@@ -55,7 +148,7 @@ class AddClass extends React.Component {
             // console.log(`${key}: ${value}`);
 
             let conID = String(key) + "Input";
-            let lab = this.capitalizeFirstLetter(String(key));
+            let lab = capitalizeFirstLetter(String(key));
             let checkBox = <Col key={i}>
                 <Form.Group className="mb-3" controlId={conID}>
                 <Form.Check type="checkbox" label={lab} onChange={this.handleDayCheckBoxChange}/>
@@ -80,18 +173,17 @@ class AddClass extends React.Component {
                 {dayInput}
              
 
-              <DropdownButton className='my-3' id="startTimeInput" title="Start Time">
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-              </DropdownButton>
+                <Row>
+                  <Col>
+                    {this.createTimeInput(this.state.startID)}
+                  </Col>
 
-              <DropdownButton className='my-3' id="endTimeInput" title="End Time">
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-              </DropdownButton>
-
+                  <Col>
+                    {this.createTimeInput(this.state.endID)}
+                  </Col>
+                </Row>      
+                        
+                
 
               <Button variant="primary" type="submit">
                 Submit

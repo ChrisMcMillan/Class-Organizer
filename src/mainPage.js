@@ -13,8 +13,13 @@ class MainPage extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-       
+       classList: null
       };
+    }
+
+    componentDidMount(){
+      const events = generateEvents(10);
+      this.setState({classList: events});
     }
 
     render() {
@@ -23,32 +28,35 @@ class MainPage extends React.Component {
       let col = 3;  
       let steps = [];
    
-      let events = generateEvents(10);
-      console.log(events);
+      const events = this.state.classList;
+      // console.log(events);
+  
       let eventIndex = 0;
 
-      for(let i = 1; i <= row; i++){  
+      if(events){
+        for(let i = 1; i <= row; i++){  
 
-        let subarray = [];
-        for(let j = 1; j <= col; j++){
+            let subarray = [];
+            for(let j = 1; j <= col; j++){
 
-          // This should be rendered in the event component
-          subarray.push(
-              <Col key={j}>
-                <Event name={events[eventIndex].name} days={events[eventIndex].days} times={events[eventIndex].times}/>
-            </Col>
-          );
+              // This should be rendered in the event component
+              subarray.push(
+                  <Col key={j}>
+                    <Event name={events[eventIndex].name} days={events[eventIndex].days} times={events[eventIndex].times}/>
+                </Col>
+              );
 
-          eventIndex++;
-          if(eventIndex === events.length) break;
+              eventIndex++;
+              if(eventIndex === events.length) break;
+            }
+          
+            let r = <Row key={i}>{ subarray }</Row>
+            steps.push(r);
+
+            if(eventIndex === events.length) break;
         }
-      
-        let r = <Row key={i}>{ subarray }</Row>
-        steps.push(r);
-
-        if(eventIndex === events.length) break;
-    }
-      
+      }
+          
 
       return (
         <Container>

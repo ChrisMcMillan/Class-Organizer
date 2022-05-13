@@ -53,6 +53,7 @@ function getRandomInt(max) {
     let maxTime = 24;
     let times = {start: null, end: null};
     let s = getRandomInt(maxTime);
+    if(s === 0) s += 1;
     let e = s + 2;
   
     if(e > maxTime){
