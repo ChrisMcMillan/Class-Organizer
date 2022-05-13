@@ -43,11 +43,15 @@ class Event extends React.Component {
     timeToString(time){
       let mid = 12;
       let s = "";
+      let minS = "";
+
+      if(time.min < 10) minS = "0" + time.min;
+      else minS = time.min;
     
-      if(time > mid) s = time - mid + " PM";
-      else if(time === mid) s = time + " PM";
-      else if(time === 0) s = "12 AM";
-      else s = time + " AM";
+      if(time.hour > mid) s = time.hour - mid + ":" + minS + " PM";
+      else if(time.hour === mid) s = time.hour + ":" + minS + " PM";
+      else if(time.hour === 0) s = "12" + ":" + minS + " AM";
+      else s = time.hour + ":" + minS + " AM";
     
       return s;
     }

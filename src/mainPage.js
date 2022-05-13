@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form'
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
+
 import Event from './event';
+import AddClass from './addClass';
+
 import { generateEvents } from './generateEventData';
 
 class MainPage extends React.Component {
@@ -61,81 +61,8 @@ class MainPage extends React.Component {
 
           <h5 className='my-5'>Rank the days you want to go to school with 1 being the most desirable and 7 being the least desirable.</h5>
 
-          <Container>
-            <h3 className='my-5'>Add Class</h3> 
-            <Form>
-              <Form.Group className="mb-3" controlId="classNameInput">
-                <Form.Label>Class Name</Form.Label>
-                <Form.Control placeholder="Enter class name" />
-              </Form.Group>
-
-              <Row>
-
-                <Col>
-                  <Form.Group className="mb-3" controlId="mondayInput">
-                    <Form.Check type="checkbox" label="Monday" />
-                  </Form.Group>
-                </Col> 
-
-                <Col>
-                  <Form.Group className="mb-3" controlId="tuesdayInput">
-                    <Form.Check type="checkbox" label="Tuesday" />
-                  </Form.Group>
-                </Col> 
-
-                <Col>
-                  <Form.Group className="mb-3" controlId="wednesdayInput">
-                    <Form.Check type="checkbox" label="Wednesday" />
-                  </Form.Group>
-                </Col> 
-
-                <Col>
-                  <Form.Group className="mb-3" controlId="thursdayInput">
-                    <Form.Check type="checkbox" label="Thursday" />
-                  </Form.Group>
-                </Col> 
-
-                <Col>
-                  <Form.Group className="mb-3" controlId="fridayInput">
-                    <Form.Check type="checkbox" label="Friday" />
-                  </Form.Group>
-                </Col> 
-
-                <Col>
-                  <Form.Group className="mb-3" controlId="saturdayInput">
-                    <Form.Check type="checkbox" label="Saturday" />
-                  </Form.Group>
-                </Col> 
-
-
-                <Col>
-                  <Form.Group className="mb-3" controlId="sundayInput">
-                    <Form.Check type="checkbox" label="Sunday" />
-                  </Form.Group>
-                </Col> 
-
-
-              </Row>
-
-              <DropdownButton className='my-3' id="startTimeInput" title="Start Time">
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-              </DropdownButton>
-
-              <DropdownButton className='my-3' id="endTimeInput" title="End Time">
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-              </DropdownButton>
-
-
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
-            </Form>
-          </Container>
-
+         
+          <AddClass/>
           
           <Container>
             <h3 className='my-5'>Your Classes</h3> 

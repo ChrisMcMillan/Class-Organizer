@@ -58,9 +58,12 @@ function getRandomInt(max) {
     if(e > maxTime){
       e = e - maxTime;
     }
+
+    let sMin = 5 * getRandomInt(11);
+    let eMin = 5 * getRandomInt(11);
   
-    times.start = s;
-    times.end = e;
+    times.start = {hour: s, min: sMin};
+    times.end = {hour: e, min: eMin};
   
     return times;
   }
