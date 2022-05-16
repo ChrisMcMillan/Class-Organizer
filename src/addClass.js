@@ -13,23 +13,24 @@ class AddClass extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          name: "",
-          days: {monday: false, tuesday: false, wednesday: false,
-            thursday: false, friday: false, saturday: false, sunday: false},
-          times: {start: {hour: 1, min: 0}, end: {hour: 1, min: 0}},
+          classData: {
+            name: "",
+            days: {monday: false, tuesday: false, wednesday: false,
+              thursday: false, friday: false, saturday: false, sunday: false},
+            times: {start: {hour: 1, min: 0}, end: {hour: 1, min: 0}},
+          },
           startID: "Start",
-          endID: "End"
+          endID: "End",
+          validated: false
         };
 
         this.handleDayCheckBoxChange = this.handleDayCheckBoxChange.bind(this);
         this.handleClassNameChange = this.handleClassNameChange.bind(this);
-        this.handleClassTimeChange = this.handleClassTimeChange.bind(this);
+        this.handleClassHourChange = this.handleClassHourChange.bind(this);
+        this.handleClassMinChange = this.handleClassMinChange.bind(this);
+        this.handleSubmitClick = this.handleSubmitClick.bind(this);
       }
 
-      /* capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-      } */
-      
       handleDayCheckBoxChange(event) {
        
         // console.log(event.target.checked);
@@ -37,7 +38,7 @@ class AddClass extends React.Component {
 
         let ret = event.target.id.replace('Input','');
         // console.log(ret);
-        const newDays = this.state.days;
+        const newDays = this.state.classData.days;
         // console.log(newDays);
         newDays[ret] = event.target.checked;
         // console.log(newDays);
@@ -46,12 +47,65 @@ class AddClass extends React.Component {
 
       handleClassNameChange(event) {
        
-       
-        this.setState({ name:  event.target.value});
+        const cd = this.state.classData;
+        cd.name = event.target.value;
+        this.setState({ classData:  cd});
       }
 
-      handleClassTimeChange(event){
-        console.log(event);
+      handleClassHourChange(event){
+        // console.log(event.target.id);
+        // console.log(event.target.value);
+
+        const newTime = this.state.classData.times;
+
+        if(event.target.id === "StartHourInput"){
+          newTime.start.hour = event.target.value;
+          this.setState({ times: newTime});
+        }
+        else if(event.target.id === "EndHourInput"){
+          newTime.end.hour = event.target.value;
+          this.setState({ times: newTime});
+        }
+        else{
+          console.error("Invalid id pass into handleClassHourChange()");
+          return null;
+        }
+      }
+
+      handleClassMinChange(event){
+        const newTime = this.state.classData.times;
+
+        if(event.target.id === "StartMinInput"){
+          newTime.start.min = event.target.value;
+          this.setState({ times: newTime});
+        }
+        else if(event.target.id === "EndMinInput"){
+          newTime.end.min = event.target.value;
+          this.setState({ times: newTime});
+        }
+        else{
+          console.error("Invalid id pass into handleClassMinChange()");
+          return null;
+        }
+      }
+
+      handleSubmitClick(event){
+        // console.log("handleSubmitClick() being clicked");
+       
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        
+        if (form.checkValidity() === false) {
+          // event.preventDefault();
+          event.stopPropagation();
+        }
+        else{
+          this.props.addClassEvent(this.state.classData);
+        }
+        
+        this.setState({ validated: true});
+
       }
 
 
@@ -81,19 +135,12 @@ class AddClass extends React.Component {
         let maxTime = 24;
         let dropDownSelection = [];
 
-        {/* <Form.Select aria-label="Default select example">
-                  <option>Open this select menu</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </Form.Select> */}
-
         for(let i = 1; i <= maxTime; i++){
             let item  = <option value={i} key={i}>{this.hourToString(i)}</option>;
             dropDownSelection.push(item);
         }
         
-        let input = <Form.Select aria-label="Default select example"  className='my-3' id={inputID} title={tit}>
+        let input = <Form.Select onChange={this.handleClassHourChange} aria-label="Default select example"  className='my-3' id={inputID} title={tit}>
             {dropDownSelection}
         </Form.Select>;
 
@@ -116,7 +163,7 @@ class AddClass extends React.Component {
             dropDownSelection.push(item);
         }
         
-        let input = <Form.Select aria-label="Default select example" className='my-3' id={inputID} title={tit}>
+        let input = <Form.Select onChange={this.handleClassMinChange} aria-label="Default select example" className='my-3' id={inputID} title={tit}>
             {dropDownSelection}
         </Form.Select>;
 
@@ -144,7 +191,7 @@ class AddClass extends React.Component {
         let dayInputCols = [];
         let i = 0;
 
-        for (const [key, value] of Object.entries(this.state.days)) {
+        for (const [key, value] of Object.entries(this.state.classData.days)) {
             // console.log(`${key}: ${value}`);
 
             let conID = String(key) + "Input";
@@ -164,10 +211,13 @@ class AddClass extends React.Component {
         return(
             <Container>
             <h3 className='my-5'>Add Class</h3> 
-            <Form>
+            <Form validated={this.state.validated} noValidate onSubmit={this.handleSubmitClick}>
               <Form.Group className="mb-3" controlId="classNameInput">
                 <Form.Label>Class Name</Form.Label>
-                <Form.Control placeholder="Enter class name" onChange={this.handleClassNameChange}/>
+                <Form.Control placeholder="Enter class name" onChange={this.handleClassNameChange} required />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a class name.
+                </Form.Control.Feedback>
               </Form.Group>
 
                 {dayInput}

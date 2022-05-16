@@ -13,13 +13,29 @@ class MainPage extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-       classList: null
+       classList: []
       };
+
+      this.addNewClass = this.addNewClass.bind(this);
     }
 
     componentDidMount(){
-      const events = generateEvents(10);
-      this.setState({classList: events});
+      // const events = generateEvents(10);
+      // this.setState({classList: events});
+    }
+
+    addNewClass(classData){
+
+      
+      if(classData == null) return;
+
+      const events = this.state.classList;
+     
+      if(events){
+        
+        events.push(classData)
+        this.setState({classList: events});
+      }
     }
 
     render() {
@@ -33,7 +49,7 @@ class MainPage extends React.Component {
   
       let eventIndex = 0;
 
-      if(events){
+      if(events && events.length > 0){
         for(let i = 1; i <= row; i++){  
 
             let subarray = [];
@@ -70,7 +86,7 @@ class MainPage extends React.Component {
           <h5 className='my-5'>Rank the days you want to go to school with 1 being the most desirable and 7 being the least desirable.</h5>
 
          
-          <AddClass/>
+          <AddClass addClassEvent={this.addNewClass}/>
           
           <Container>
             <h3 className='my-5'>Your Classes</h3> 

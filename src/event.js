@@ -54,7 +54,7 @@ class Event extends React.Component {
               {this.displayTimes(this.state.times)}
             </Card.Text>
   
-            <Button variant="primary">Go somewhere</Button>
+            <Button variant="primary">Edit</Button>
           </Card.Body>
         </Card>
       )
