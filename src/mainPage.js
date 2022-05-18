@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 
 import Event from './event';
 import AddClass from './addClass';
+import OptimizeClass from './optimizeClass';
 
 import { generateEvents } from './generateEventData';
 
@@ -13,15 +14,16 @@ class MainPage extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-       classList: []
+       classList: [],
+       displayOptClasses: true
       };
 
       this.addNewClass = this.addNewClass.bind(this);
     }
 
     componentDidMount(){
-      // const events = generateEvents(10);
-      // this.setState({classList: events});
+      const events = generateEvents(10);
+      this.setState({classList: events});
     }
 
     addNewClass(classData){
@@ -42,7 +44,7 @@ class MainPage extends React.Component {
 
       let row = 4;
       let col = 3;  
-      let steps = [];
+      let userClasses = [];
    
       const events = this.state.classList;
       // console.log(events);
@@ -67,11 +69,15 @@ class MainPage extends React.Component {
             }
           
             let r = <Row key={i}>{ subarray }</Row>
-            steps.push(r);
+            userClasses.push(r);
 
             if(eventIndex === events.length) break;
         }
       }
+
+      let optClasses = null;
+      if(this.state.displayOptClasses) optClasses  = <OptimizeClass classList={this.state.classList}/>;
+      else optClasses = null;
           
 
       return (
@@ -85,13 +91,18 @@ class MainPage extends React.Component {
 
           <h5 className='my-5'>Rank the days you want to go to school with 1 being the most desirable and 7 being the least desirable.</h5>
 
+
+          <h3>Number of Classes</h3>
+
+          <h5 className='my-5'>Pick the number of classes you want to take this semester.</h5>
+
          
           <AddClass addClassEvent={this.addNewClass}/>
           
           <Container>
             <h3 className='my-5'>Your Classes</h3> 
 
-              { steps }
+              { userClasses }
       
           </Container>
 
@@ -101,17 +112,7 @@ class MainPage extends React.Component {
             <Button variant="secondary">Clear All</Button>{' '}
           </Container> 
 
-          <h3 className='my-5'>Your Optimize Schedule</h3> 
-
-          <Row>
-            <Col><h4>Monday</h4></Col>
-            <Col><h4>Tuesday</h4></Col>
-            <Col><h4>Wednesday</h4></Col>
-            <Col><h4>Thursday</h4></Col>
-            <Col><h4>Friday</h4></Col>
-            <Col><h4>Saturday</h4></Col>
-            <Col><h4>Sunday</h4></Col>
-          </Row>
+          {optClasses}
 
         </Container>
       );

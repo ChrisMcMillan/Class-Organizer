@@ -73,8 +73,11 @@ export function generateEvents(count) {
     let events = [];
   
     for(let i = 0; i < count; i++){
+        let dayCount = getRandomInt(7);
+        if(dayCount === 0) dayCount = 1; 
+        
         let nam = generateNumString(9);
-        let d = generateDays(3);
+        let d = generateDays(dayCount);
         let t = generateTimes();
   
         let e = {name: nam, days: d, times: t};

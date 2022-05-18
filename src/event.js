@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 
 import { timeToString, capitalizeFirstLetter } from './utility';
 
+// This renders class data as a info card
 class Event extends React.Component {
     constructor(props) {
       super(props);
