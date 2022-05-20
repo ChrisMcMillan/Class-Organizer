@@ -3,8 +3,9 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Event from './event';
-
-import { DAY_ENUM } from './utility';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import { DAY_ENUM, timeToString, capitalizeFirstLetter } from './utility';
 
 class OptimizeClass extends React.Component {
 
@@ -12,20 +13,11 @@ class OptimizeClass extends React.Component {
         super(props);
         this.state = {
          dayRanking: DAY_ENUM,
-         classCount: 5
+         classCount: 5,
+         optSchMatrix: null
         };
 
-
-        this.state.optSchMatrix = {};
-
-        for (const [key, value] of Object.entries(DAY_ENUM)) {
-             
-            this.state.optSchMatrix[key] = []; 
-        }
-
-
-        console.log(DAY_ENUM );
-
+        this.optimizeSchedule = this.optimizeSchedule.bind(this);
     }
 
     findDayCountMultiplier(dayCount){
@@ -83,7 +75,12 @@ class OptimizeClass extends React.Component {
 
         let classAllocationCount = 0;
 
-        const m = this.state.optSchMatrix;
+        const m = {};
+
+        for (const [key, value] of Object.entries(DAY_ENUM)) {
+             
+            m[key] = []; 
+        }
 
         for(let i = 0; i < cList.length; i++){
             for (const [key, value] of Object.entries(cList[i].days)) {
@@ -95,97 +92,74 @@ class OptimizeClass extends React.Component {
             classAllocationCount++;
         }
 
-        console.log(m);
-        console.log(classAllocationCount);
-        return m;
+        this.setState({optSchMatrix: m});
     }
 
     // Try making into 7 cards instead trying to use grid system to avoid unreadable data when screen gets small.
-    showOptSch(m){
+    showOptSch(matrix){
 
-        if(m == null) return;
+        if(matrix == null) return;
 
         let userClasses = [];
-        let row = [];
         let i = 0;
 
         for (const [key, value] of Object.entries(DAY_ENUM)) {
+            let title = <Card.Title>{capitalizeFirstLetter(key)}</Card.Title>;
+            let curArray = matrix[key];
+            let eventArray = [];
 
-            
-            row.push(<Col key={i} ><h4>{key}</h4></Col>);
+            for(let j = 0; j < curArray.length; j++){
+                let c = curArray[j];
+                let e = <Col key={j}>
+                    <Event name={c.name} days={c.days} times={c.times}/>
+                </Col>;
+
+                eventArray.push(e);
+            }
+
+
+          let dayCard = <Container>
+              {title}
+              <Row>{eventArray}</Row>
+            </Container>
+
+            userClasses.push(<Col className='mb-5' key={i}>{dayCard}</Col>);
             i++
         }
 
-        userClasses.push(<Row key={0}> {row} </Row>);
-        
-
-        for(let i = 0; i < 7; i++){
-            row = [];
-            let j = 0;
-
-            for (const [key, value] of Object.entries(DAY_ENUM)) {
-
-                // console.log(key, m[key]);
-                if(i + 1 > m[key].length){
-                    row.push(<Col key={j}> <h4> empty </h4></Col>);
-                }
-                else{
-                    let c = m[key][i];
-                 
-                    row.push(<Col key={j}> 
-                        {c.name}
-                        </Col>);
-                }
-
-                j++;
-            }
-            
-            userClasses.push(<Row key={i + 1}> {row} </Row>);
-        }
-
-        return userClasses;
+        return <Row>{userClasses}</Row>;
     }
 
-    render() {
-
-
+    optimizeSchedule(){
         const cList = this.props.classList;
-        console.log(cList);
+
+        if(cList === null || cList.length === 0) return;
+        
+        // console.log(cList);
         this.assignDayValues(cList, this.state.dayRanking)
 
         cList.sort(function(a, b) {
             return b.dayValue - a.dayValue;
           });
-        console.log(cList);
+        // console.log(cList);
 
-        let m = this.addClassesToOptSch(cList);
+        this.addClassesToOptSch(cList);
+    }
+
+    render() {
+
+
+        
 
 
         return (<Container>
 
-        
+            <Button onClick={this.optimizeSchedule} variant="primary">Optimize</Button>{' '}
+
             <h3 className='my-5'>Your Optimize Schedule</h3> 
 
-            {this.showOptSch(m)}
-           {/*  <Row>
-                <Col><h4>Monday</h4></Col>
-                <Col><h4>Tuesday</h4></Col>
-                <Col><h4>Wednesday</h4></Col>
-                <Col><h4>Thursday</h4></Col>
-                <Col><h4>Friday</h4></Col>
-                <Col><h4>Saturday</h4></Col>
-                <Col><h4>Sunday</h4></Col>
-            </Row>
-
-            <Row>
-                <Col><h4>1</h4></Col>
-                <Col><h4>2</h4></Col>
-                <Col><h4>3</h4></Col>
-                <Col><h4>4</h4></Col>
-                <Col><h4>5</h4></Col>
-                <Col><h4>6</h4></Col>
-                <Col><h4>7</h4></Col>
-            </Row> */}
+            {this.showOptSch(this.state.optSchMatrix)}
+          
         
          </Container>);
     }

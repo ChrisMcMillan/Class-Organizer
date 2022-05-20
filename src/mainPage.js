@@ -41,9 +41,7 @@ class MainPage extends React.Component {
     }
 
     render() {
-
-      let row = 4;
-      let col = 3;  
+      
       let userClasses = [];
    
       const events = this.state.classList;
@@ -51,28 +49,16 @@ class MainPage extends React.Component {
   
       let eventIndex = 0;
 
-      if(events && events.length > 0){
-        for(let i = 1; i <= row; i++){  
 
-            let subarray = [];
-            for(let j = 1; j <= col; j++){
+      while(eventIndex <  events.length){
 
-              // This should be rendered in the event component
-              subarray.push(
-                  <Col key={j}>
-                    <Event name={events[eventIndex].name} days={events[eventIndex].days} times={events[eventIndex].times}/>
-                </Col>
-              );
+        let e = events[eventIndex];
+        userClasses.push(
+          <Col key={eventIndex}>
+            <Event name={e.name} days={e.days} times={e.times}/>
+        </Col>);
 
-              eventIndex++;
-              if(eventIndex === events.length) break;
-            }
-          
-            let r = <Row key={i}>{ subarray }</Row>
-            userClasses.push(r);
-
-            if(eventIndex === events.length) break;
-        }
+        eventIndex++;
       }
 
       let optClasses = null;
@@ -102,13 +88,13 @@ class MainPage extends React.Component {
           <Container>
             <h3 className='my-5'>Your Classes</h3> 
 
-              { userClasses }
+            <Row xs="auto">{userClasses}</Row>
       
           </Container>
 
           
           <Container className='my-5'>
-            <Button variant="primary">Optimize</Button>{' '}
+            
             <Button variant="secondary">Clear All</Button>{' '}
           </Container> 
 
