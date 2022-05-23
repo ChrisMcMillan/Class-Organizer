@@ -130,20 +130,86 @@ class OptimizeClass extends React.Component {
         return <Row>{userClasses}</Row>;
     }
 
+    dayOverlap(daysA, daysB){
+
+        for (const [key, value] of Object.entries(DAY_ENUM)){
+
+            if(daysA[key] && daysB[key]) return true;
+        }
+
+        return false;
+    }
+
+    timeOverlap(timeA, timeB){
+
+        let minInHour = 60;
+
+        let timeAStart = timeA.start.hour * minInHour + timeA.start.min;
+        let timeAEnd = timeA.end.hour * minInHour + timeA.end.min;
+
+        let timeBStart = timeB.start.hour * minInHour + timeB.start.min;
+        let timeBEnd = timeB.end.hour * minInHour + timeB.end.min;
+
+        let midA = (timeAStart + timeAEnd) / 2;
+
+        if(midA >= timeBStart && midA <= timeBEnd) return true;
+
+        if(timeAEnd >= timeBStart && timeAEnd <= timeBEnd) return true;
+
+        if(timeAStart >= timeBStart && timeAStart <= timeBEnd) return true;
+
+        return false;
+    }
+
     optimizeSchedule(){
         const cList = this.props.classList;
 
         if(cList === null || cList.length === 0) return;
-        
-        // console.log(cList);
+    
         this.assignDayValues(cList, this.state.dayRanking)
 
         cList.sort(function(a, b) {
             return b.dayValue - a.dayValue;
           });
-        // console.log(cList);
+        console.log("cList", cList);
 
-        this.addClassesToOptSch(cList);
+        let finalList = []
+        finalList.push(cList[0]);
+
+        if(finalList.length === this.state.classCount){
+            this.addClassesToOptSch(finalList);
+            return;
+        }
+
+        for(let i = 1; i < cList.length; i++){
+         
+            let cur = cList[i]
+            let timeConflict = false;
+
+            for(let j = 0; j < finalList.length; j++){
+                let fin = finalList[j];
+
+                if(this.dayOverlap(cur.days, fin.days)){
+                    console.log("Day conflict btwn: ", cur, fin); 
+
+                    if(this.timeOverlap(cur.times, fin.times)){
+                        console.log("Time conflict btwn: ", cur, fin); 
+                        timeConflict = true;
+                        break;
+                    }
+                }
+            }
+
+            if(timeConflict === false){
+                finalList.push(cList[i])
+
+                if(finalList.length === this.state.classCount) break;
+            }
+        }
+
+        console.log("finalList", finalList);
+
+        this.addClassesToOptSch(finalList);
     }
 
     render() {

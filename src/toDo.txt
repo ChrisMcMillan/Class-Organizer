@@ -1,0 +1,3 @@
+1. Solve night to day edge case for timeOverlap()
+2. Apply DAY_ENUM in utility to all uses of week. 
+3. Need to check every item in the final list for conlflict
