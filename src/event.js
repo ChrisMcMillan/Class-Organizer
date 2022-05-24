@@ -8,11 +8,7 @@ import { timeToString, capitalizeFirstLetter } from './utility';
 class Event extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {
-        name: this.props.name,
-        days: this.props.days,
-        times: this.props.times
-      };
+     
     }
   
     
@@ -45,14 +41,14 @@ class Event extends React.Component {
         <Card style={{ width: '18rem' }}>
           <Card.Body>
   
-            <Card.Title>{this.state.name}</Card.Title>
+            <Card.Title>{this.props.name}</Card.Title>
   
             <Card.Text>
-              {this.displayEventDays(this.state.days)}
+              {this.displayEventDays(this.props.days)}
             </Card.Text>
   
             <Card.Text>
-              {this.displayTimes(this.state.times)}
+              {this.displayTimes(this.props.times)}
             </Card.Text>
   
             <Button variant="primary">Edit</Button>

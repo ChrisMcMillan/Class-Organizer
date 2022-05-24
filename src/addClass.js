@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
-import { timeToString, capitalizeFirstLetter } from './utility';
+import {capitalizeFirstLetter } from './utility';
 
 class AddClass extends React.Component {
     constructor(props) {
@@ -237,6 +237,11 @@ class AddClass extends React.Component {
                 Submit
               </Button>
             </Form>
+
+            <Button onClick={this.props.generateExampleClasses} variant="warning" className='my-3'>
+                Generate Example Classes
+              </Button>
+
           </Container>
         )
       }

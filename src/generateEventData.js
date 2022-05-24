@@ -68,15 +68,21 @@ function getRandomInt(max) {
   
     return times;
   }
+
+
   
 export function generateEvents(count) {
     let events = [];
+    let classNames = ["Bio", "CS", "Calculus", "English", "Linear Algebra", "History",
+     "Anthropology", "Public Speaking", "Spanish", "Ecosystems", "Web Development",
+    "Philosophy", "Psychology", "Game Design", "Art", "Human Anatomy", "Defense Against the Dark Arts"]
   
     for(let i = 0; i < count; i++){
         let dayCount = getRandomInt(7);
         if(dayCount === 0) dayCount = 1; 
         
-        let nam = generateNumString(9);
+        let classNameIndex = getRandomInt(classNames.length);
+        let nam = classNames[classNameIndex] + " " + generateNumString(3);
         let d = generateDays(dayCount);
         let t = generateTimes();
   

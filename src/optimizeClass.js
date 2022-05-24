@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Event from './event';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { DAY_ENUM, timeToString, capitalizeFirstLetter } from './utility';
+import { DAY_ENUM, capitalizeFirstLetter } from './utility';
 
 class OptimizeClass extends React.Component {
 
@@ -13,7 +13,6 @@ class OptimizeClass extends React.Component {
         super(props);
         this.state = {
          dayRanking: DAY_ENUM,
-         classCount: 5,
          optSchMatrix: null
         };
 
@@ -143,12 +142,19 @@ class OptimizeClass extends React.Component {
     timeOverlap(timeA, timeB){
 
         let minInHour = 60;
+        let maxHour = 24;
 
         let timeAStart = timeA.start.hour * minInHour + timeA.start.min;
         let timeAEnd = timeA.end.hour * minInHour + timeA.end.min;
 
+        // Going from night to morning
+        if(timeAStart > timeAEnd) timeAEnd = maxHour + timeA.end.hour * minInHour + timeA.end.min;
+
         let timeBStart = timeB.start.hour * minInHour + timeB.start.min;
         let timeBEnd = timeB.end.hour * minInHour + timeB.end.min;
+
+        // Going from night to morning
+        if(timeBStart > timeBEnd) timeBEnd = maxHour + timeB.end.hour * minInHour + timeB.end.min;
 
         let midA = (timeAStart + timeAEnd) / 2;
 
@@ -176,7 +182,7 @@ class OptimizeClass extends React.Component {
         let finalList = []
         finalList.push(cList[0]);
 
-        if(finalList.length === this.state.classCount){
+        if(finalList.length === this.props.classCount){
             this.addClassesToOptSch(finalList);
             return;
         }
@@ -203,7 +209,7 @@ class OptimizeClass extends React.Component {
             if(timeConflict === false){
                 finalList.push(cList[i])
 
-                if(finalList.length === this.state.classCount) break;
+                if(finalList.length === this.props.classCount) break;
             }
         }
 
@@ -214,8 +220,10 @@ class OptimizeClass extends React.Component {
 
     render() {
 
-
-        
+       /*  let timeA = {start:{hour: 23, min: 5}, end: {hour: 1, min: 0}}
+        let timeB = {start:{hour: 22, min: 5}, end: {hour: 24, min: 35}}
+        let r = this.timeOverlap(timeA, timeB)
+        console.log("Night to day test result = ", r); */
 
 
         return (<Container>
