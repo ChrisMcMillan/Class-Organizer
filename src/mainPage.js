@@ -17,14 +17,17 @@ class MainPage extends React.Component {
       super(props);
       this.state = {
        classList: [],
-       classNumber: 1
+       classNumber: 1,
+       dayPref: DAY_ENUM
       };
 
       this.addNewClass = this.addNewClass.bind(this);
       this.generateExampleClasses = this.generateExampleClasses.bind(this);
       this.clearAll = this.clearAll.bind(this);
       this.createClassNumberInput = this.createClassNumberInput.bind(this);
-      this.handleClassNumberChange = this.handleClassNumberChange.bind(this); 
+      this.handleClassNumberChange = this.handleClassNumberChange.bind(this);
+      this.handelDayPrefChange = this.handelDayPrefChange.bind(this);
+       
     }
 
     addNewClass(classData){
@@ -57,6 +60,8 @@ class MainPage extends React.Component {
       this.setState({ classNumber: parseInt(event.target.value)});
     }
 
+ 
+
     createClassNumberInput(){
         
       let maxNumber = 10;
@@ -75,7 +80,31 @@ class MainPage extends React.Component {
       return input;
     }
 
-    createDayPreferenceInput(id){
+    handelDayPrefChange(event){
+      
+      let val = parseInt(event.target.value);
+      let keyValue = event.target.id.replace('PrefInput','');
+      // console.log("id:", id, "val:", val, "keyValue:", keyValue);
+
+      const newDayPref = this.state.dayPref;
+      let temp = newDayPref[keyValue];
+      
+
+      for (const [key, value] of Object.entries(DAY_ENUM)){
+
+          if(newDayPref[key] === val){
+            // console.log("key:", key);
+            newDayPref[key] = temp;
+            break;
+          }
+      }
+
+      newDayPref[keyValue] = val;
+
+      this.setState({ dayPref: newDayPref });            
+    }
+
+    createDayPreferenceInput(id, curValue){
 
       let inputID = id + "PrefInput";
       let tit = id;
@@ -88,7 +117,7 @@ class MainPage extends React.Component {
       }
       
       let input = <Form.Label>{capitalizeFirstLetter(id)}
-          <Form.Select aria-label="Default select example"  className='my-3' id={inputID} title={tit}>
+          <Form.Select onChange={this.handelDayPrefChange}  aria-label="Default select example" value={curValue}  className='my-3' id={inputID} title={tit}>
             {dropDownSelection}
         </Form.Select>
       </Form.Label>
@@ -101,7 +130,7 @@ class MainPage extends React.Component {
       let allInputs = [];
       let i = 0;
       for (const [key, value] of Object.entries(DAY_ENUM)){
-          let item = <Col key={i}> {this.createDayPreferenceInput(key)} </Col>;
+          let item = <Col key={i}> {this.createDayPreferenceInput(key, this.state.dayPref[key])} </Col>;
           allInputs.push(item);
           i++;
       }
@@ -131,7 +160,7 @@ class MainPage extends React.Component {
         eventIndex++;
       }
 
-      let optClasses = <OptimizeClass classList={this.state.classList} classCount={this.state.classNumber}/>;
+      let optClasses = <OptimizeClass classList={this.state.classList} classCount={this.state.classNumber} dayRanking={this.state.dayPref}/>;
           
 
       return (

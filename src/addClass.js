@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
-import {capitalizeFirstLetter } from './utility';
+import {capitalizeFirstLetter, DAY_ENUM } from './utility';
 
 class AddClass extends React.Component {
     constructor(props) {
@@ -13,14 +13,22 @@ class AddClass extends React.Component {
         this.state = {
           classData: {
             name: "",
-            days: {monday: false, tuesday: false, wednesday: false,
-              thursday: false, friday: false, saturday: false, sunday: false},
-            times: {start: {hour: 1, min: 0}, end: {hour: 1, min: 0}},
+            days: {},
+            times: {start: {hour: 9, min: 5}, end: {hour: 11, min: 10}},
           },
           startID: "Start",
           endID: "End",
-          validated: false
+          validated: false,
+          startHourInputID: "StartHourInput",
+          endHourInputID: "EndHourInput",
+          startMinInputID: "StartMinInput",
+          endMinInputID: "EndMinInput"
         };
+
+        for (const [key, value] of Object.entries(DAY_ENUM)){
+
+          this.state.classData.days[key] = false;
+      }
 
         this.handleDayCheckBoxChange = this.handleDayCheckBoxChange.bind(this);
         this.handleClassNameChange = this.handleClassNameChange.bind(this);
@@ -56,11 +64,11 @@ class AddClass extends React.Component {
 
         const newTime = this.state.classData.times;
 
-        if(event.target.id === "StartHourInput"){
+        if(event.target.id === this.state.startHourInputID){
           newTime.start.hour = event.target.value;
           this.setState({ times: newTime});
         }
-        else if(event.target.id === "EndHourInput"){
+        else if(event.target.id === this.state.endHourInputID){
           newTime.end.hour = event.target.value;
           this.setState({ times: newTime});
         }
@@ -73,11 +81,11 @@ class AddClass extends React.Component {
       handleClassMinChange(event){
         const newTime = this.state.classData.times;
 
-        if(event.target.id === "StartMinInput"){
+        if(event.target.id === this.state.startMinInputID){
           newTime.start.min = event.target.value;
           this.setState({ times: newTime});
         }
-        else if(event.target.id === "EndMinInput"){
+        else if(event.target.id === this.state.endMinInputID){
           newTime.end.min = event.target.value;
           this.setState({ times: newTime});
         }
@@ -132,13 +140,21 @@ class AddClass extends React.Component {
         let tit = "Hour";
         let maxTime = 24;
         let dropDownSelection = [];
+        let startValue = null;
+
+        if(inputID === this.state.startHourInputID) startValue = this.state.classData.times.start.hour;
+        else if (inputID === this.state.endHourInputID) startValue = this.state.classData.times.end.hour;
+        else{
+          console.error("Unknown ID passed into createHourInput() ", inputID);
+          return;
+        }
 
         for(let i = 1; i <= maxTime; i++){
             let item  = <option value={i} key={i}>{this.hourToString(i)}</option>;
             dropDownSelection.push(item);
         }
         
-        let input = <Form.Select onChange={this.handleClassHourChange} aria-label="Default select example"  className='my-3' id={inputID} title={tit}>
+        let input = <Form.Select value={startValue} onChange={this.handleClassHourChange} aria-label="Default select example"  className='my-3' id={inputID} title={tit}>
             {dropDownSelection}
         </Form.Select>;
 
@@ -151,6 +167,14 @@ class AddClass extends React.Component {
         let tit = "Min";
         let maxTime = 55;
         let dropDownSelection = [];
+        let startValue = null;
+
+        if(inputID === this.state.startMinInputID) startValue = this.state.classData.times.start.min;
+        else if (inputID === this.state.endMinInputID) startValue = this.state.classData.times.end.min;
+        else{
+          console.error("Unknown ID passed into createMinInput() ", inputID);
+          return;
+        }
 
         for(let i = 0; i <= maxTime; i += 5){
             let num = null;
@@ -161,7 +185,7 @@ class AddClass extends React.Component {
             dropDownSelection.push(item);
         }
         
-        let input = <Form.Select onChange={this.handleClassMinChange} aria-label="Default select example" className='my-3' id={inputID} title={tit}>
+        let input = <Form.Select value={startValue} onChange={this.handleClassMinChange} aria-label="Default select example" className='my-3' id={inputID} title={tit}>
             {dropDownSelection}
         </Form.Select>;
 
@@ -196,7 +220,7 @@ class AddClass extends React.Component {
             let lab = capitalizeFirstLetter(String(key));
             let checkBox = <Col key={i}>
                 <Form.Group className="mb-3" controlId={conID}>
-                <Form.Check type="checkbox" label={lab} onChange={this.handleDayCheckBoxChange}/>
+                <Form.Check checked={this.state.classData.days[key]} type="checkbox" label={lab} onChange={this.handleDayCheckBoxChange}/>
                 </Form.Group>
             </Col>; 
 

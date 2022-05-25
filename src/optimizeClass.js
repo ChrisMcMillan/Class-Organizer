@@ -12,7 +12,6 @@ class OptimizeClass extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-         dayRanking: DAY_ENUM,
          optSchMatrix: null
         };
 
@@ -172,7 +171,7 @@ class OptimizeClass extends React.Component {
 
         if(cList === null || cList.length === 0) return;
     
-        this.assignDayValues(cList, this.state.dayRanking)
+        this.assignDayValues(cList, this.props.dayRanking)
 
         cList.sort(function(a, b) {
             return b.dayValue - a.dayValue;
