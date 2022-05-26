@@ -22,7 +22,9 @@ class AddClass extends React.Component {
           startHourInputID: "StartHourInput",
           endHourInputID: "EndHourInput",
           startMinInputID: "StartMinInput",
-          endMinInputID: "EndMinInput"
+          endMinInputID: "EndMinInput",
+          dayInputError: null,
+          timeInputError: null
         };
 
         for (const [key, value] of Object.entries(DAY_ENUM)){
@@ -35,6 +37,38 @@ class AddClass extends React.Component {
         this.handleClassHourChange = this.handleClassHourChange.bind(this);
         this.handleClassMinChange = this.handleClassMinChange.bind(this);
         this.handleSubmitClick = this.handleSubmitClick.bind(this);
+        this.validateTimeInput = this.validateTimeInput.bind(this);
+        
+      }
+
+
+      validateTimeInput(){
+
+        const startTime = this.state.classData.times.start;
+        const endTime = this.state.classData.times.end;
+        let output = {valid: true, errorMessage: ""};
+
+        console.log("startTime", startTime);
+        console.log("endTime", endTime);
+
+        if(startTime.hour === endTime.hour && startTime.min === endTime.min){
+          output.valid = false;
+          output.errorMessage = "The start time and end time can not be the same.";
+          return output;
+        }
+
+        return output;
+      }
+
+      atLeastOneDayCheckBox(){
+
+        for (const [key, value] of Object.entries(DAY_ENUM)){
+
+            if(this.state.classData.days[key] === true) return true;
+  
+        }
+
+        return false;
       }
 
       handleDayCheckBoxChange(event) {
@@ -101,6 +135,43 @@ class AddClass extends React.Component {
         event.preventDefault();
 
         const form = event.currentTarget;
+
+        let validTime = this.validateTimeInput();
+
+        if(validTime.valid == false){
+          console.error("Error: Invalid time input");
+
+          this.setState({
+            timeInputError:    <p className="text-danger">
+            {validTime.errorMessage}
+          </p>
+           });
+
+          return;
+        }
+        else{
+          this.setState({
+            timeInputError: null
+           });
+        }
+
+
+        if(this.atLeastOneDayCheckBox() == false){
+          // console.error("Error: At least one day must be checked");
+
+          this.setState({
+            dayInputError:    <p className="text-danger">
+            Please pick at least one day.
+          </p>
+           });
+
+          return;
+        }
+        else{
+          this.setState({
+            dayInputError: null
+           });
+        }
         
         if (form.checkValidity() === false) {
           // event.preventDefault();
@@ -220,7 +291,8 @@ class AddClass extends React.Component {
             let lab = capitalizeFirstLetter(String(key));
             let checkBox = <Col key={i}>
                 <Form.Group className="mb-3" controlId={conID}>
-                <Form.Check checked={this.state.classData.days[key]} type="checkbox" label={lab} onChange={this.handleDayCheckBoxChange}/>
+                <Form.Check feedbackType="invalid" feedback="You must select at least one day."
+                 checked={this.state.classData.days[key]} type="checkbox" label={lab} onChange={this.handleDayCheckBoxChange}/>
                 </Form.Group>
             </Col>; 
 
@@ -236,13 +308,14 @@ class AddClass extends React.Component {
             <Form validated={this.state.validated} noValidate onSubmit={this.handleSubmitClick}>
               <Form.Group className="mb-3" controlId="classNameInput">
                 <Form.Label>Class Name</Form.Label>
-                <Form.Control placeholder="Enter class name" onChange={this.handleClassNameChange} required />
+                <Form.Control maxLength={50} placeholder="Enter class name" onChange={this.handleClassNameChange} required />
                 <Form.Control.Feedback type="invalid">
                   Please provide a class name.
                 </Form.Control.Feedback>
               </Form.Group>
 
                 {dayInput}
+                {this.state.dayInputError}
              
 
                 <Row>
@@ -255,7 +328,7 @@ class AddClass extends React.Component {
                   </Col>
                 </Row>      
                         
-                
+                {this.state.timeInputError}
 
               <Button variant="primary" type="submit">
                 Submit
