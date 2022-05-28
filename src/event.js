@@ -37,6 +37,12 @@ class Event extends React.Component {
     }
   
     render(){
+
+      let removeButton = null;
+
+      if(this.props.showRemoveButton === true) removeButton = <Button onClick={() => this.props.removeClass(this.props.index)} variant="danger">Remove</Button>;
+      else removeButton = null;
+
       return(
         <Card style={{ width: '18rem' }}>
           <Card.Body>
@@ -51,7 +57,7 @@ class Event extends React.Component {
               {this.displayTimes(this.props.times)}
             </Card.Text>
   
-            <Button variant="primary">Edit</Button>
+            {removeButton}
           </Card.Body>
         </Card>
       )

@@ -109,7 +109,7 @@ class OptimizeClass extends React.Component {
             for(let j = 0; j < curArray.length; j++){
                 let c = curArray[j];
                 let e = <Col key={j}>
-                    <Event name={c.name} days={c.days} times={c.times}/>
+                    <Event name={c.name} days={c.days} times={c.times}  showRemoveButton={false}/>
                 </Col>;
 
                 eventArray.push(e);

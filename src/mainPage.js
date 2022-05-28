@@ -27,6 +27,7 @@ class MainPage extends React.Component {
       this.createClassNumberInput = this.createClassNumberInput.bind(this);
       this.handleClassNumberChange = this.handleClassNumberChange.bind(this);
       this.handelDayPrefChange = this.handelDayPrefChange.bind(this);
+      this.removeClass = this.removeClass.bind(this);
        
     }
 
@@ -40,6 +41,21 @@ class MainPage extends React.Component {
       if(events){
         
         events.push(classData)
+        this.setState({classList: events});
+      }
+    }
+
+    removeClass(index){
+
+      if(index === null) return;
+
+      // console.log("Class index = ", index);
+
+      const events = this.state.classList;
+      
+      if(events){
+        
+        events.splice(index, 1);
         this.setState({classList: events});
       }
     }
@@ -154,7 +170,7 @@ class MainPage extends React.Component {
         
         userClasses.push(
           <Col key={eventIndex}>
-            <Event name={e.name} days={e.days} times={e.times}/>
+            <Event name={e.name} days={e.days} times={e.times} index={eventIndex} removeClass={this.removeClass} showRemoveButton={true}/>
         </Col>);
 
         eventIndex++;
@@ -168,7 +184,7 @@ class MainPage extends React.Component {
           
           <h1 className='my-5'>Class Schedule Optimizer</h1>
 
-          <h5 className='my-5'>The purpose of this site is to help you create an class schedule that minimizes the number of days you need to show up to school.</h5> 
+          <h5 className='my-5'>The purpose of this site is to help you create a class schedule that minimizes the number of days you need to show up to school.</h5> 
           
           <h3>Most Desired Days</h3>
 
