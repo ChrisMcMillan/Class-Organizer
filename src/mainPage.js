@@ -12,6 +12,9 @@ import OptimizeClass from './optimizeClass';
 import { generateEvents } from './generateEventData';
 import { DAY_ENUM, capitalizeFirstLetter} from './utility';
 
+
+// Display the main information for website and controls the display of the other
+// subcomponents. 
 class MainPage extends React.Component {
     constructor(props) {
       super(props);
@@ -31,6 +34,8 @@ class MainPage extends React.Component {
        
     }
 
+
+    // Adds a new class to the class list
     addNewClass(classData){
 
       
@@ -45,6 +50,7 @@ class MainPage extends React.Component {
       }
     }
 
+    // Removes a class from the class list
     removeClass(index){
 
       if(index === null) return;
@@ -60,6 +66,7 @@ class MainPage extends React.Component {
       }
     }
 
+    // Removes all classes from the class list
     clearAll(){
       this.setState({classList: []});
     }
@@ -71,13 +78,14 @@ class MainPage extends React.Component {
       // console.log(this.state.classList);
     }
 
+    // Allows the user to update the number of classes they want to take
     handleClassNumberChange(event){
 
       this.setState({ classNumber: parseInt(event.target.value)});
     }
 
  
-
+    // Creates the drop down for the number of classes the user wants to take
     createClassNumberInput(){
         
       let maxNumber = 10;
@@ -96,6 +104,9 @@ class MainPage extends React.Component {
       return input;
     }
 
+    // Allows the user to rank the days they most want to take on a 1 to 7 scale.
+    // Makes sure that there is a one to one relationship between the ranking and the day.
+    // One ranking to one day. 
     handelDayPrefChange(event){
       
       let val = parseInt(event.target.value);
@@ -103,9 +114,12 @@ class MainPage extends React.Component {
       // console.log("id:", id, "val:", val, "keyValue:", keyValue);
 
       const newDayPref = this.state.dayPref;
+
+      // To enforce a one to one relationship a swap needs to be preformed. When
+      // the user set a new ranking for day X. Day Y, with the new ranking value, needs to 
+      // be found. Day Y can get day X's old ranking value, and day X can get the new ranking value.  
       let temp = newDayPref[keyValue];
       
-
       for (const [key, value] of Object.entries(DAY_ENUM)){
 
           if(newDayPref[key] === val){
@@ -120,6 +134,8 @@ class MainPage extends React.Component {
       this.setState({ dayPref: newDayPref });            
     }
 
+
+    // Creates the drop down for picking day rankings
     createDayPreferenceInput(id, curValue){
 
       let inputID = id + "PrefInput";
@@ -141,6 +157,7 @@ class MainPage extends React.Component {
       return input;
     }
 
+    // Creates each drop down for every day in the week
     createAllDayPrefInputs(){
 
       let allInputs = [];
@@ -163,7 +180,7 @@ class MainPage extends React.Component {
   
       let eventIndex = 0;
 
-
+      // Displays the class list
       while(eventIndex <  events.length){
 
         let e = events[eventIndex];

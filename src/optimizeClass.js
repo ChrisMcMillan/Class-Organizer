@@ -7,6 +7,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { DAY_ENUM, capitalizeFirstLetter } from './utility';
 
+
+// Preform the optimization algorithm on the class list and displays it to the user. 
 class OptimizeClass extends React.Component {
 
     constructor(props) {
@@ -18,30 +20,9 @@ class OptimizeClass extends React.Component {
         this.optimizeSchedule = this.optimizeSchedule.bind(this);
     }
 
-    findDayCountMultiplier(dayCount){
-        let mid = 3;
-        let punish = 0.25;
-        let reward = 0.5;
-
-        if(dayCount === mid){
-            return 1.0
-        }
-        else if(dayCount > mid){
-            let v = dayCount - mid;
-            v = 1.0 - (v * punish);
-            if(v === 0.0) v = 0.1;
-
-            return v;
-        }
-        else{
-            let v = mid - dayCount;
-            v = v * reward;
-            v = 1.0 + v;
-            return v;
-        }
-    }
-
-
+    // Gives a day value to each class based on their preference ranking and
+    // the number of days the class takes up. Have a preference ranking closer to one
+    // gives more points. Having more days subtracts points.  
     findDayValue(event, dayRanking){
 
         let val = 0;
@@ -59,6 +40,7 @@ class OptimizeClass extends React.Component {
         return val;
     }
 
+    // Gives a day value to each class in the class list
     assignDayValues(eventList, dayRanking){
 
         for(let i = 0; i < eventList.length; i++){
@@ -67,11 +49,11 @@ class OptimizeClass extends React.Component {
         }
     }
 
+    // Adds the list of the optimized classes to optSchMatrix to be
+    // display to the user.
     addClassesToOptSch(cList){
 
         if(cList == null) return;
-
-        let classAllocationCount = 0;
 
         const m = {};
 
@@ -87,13 +69,13 @@ class OptimizeClass extends React.Component {
                 }   
             }
 
-            classAllocationCount++;
         }
 
         this.setState({optSchMatrix: m});
     }
 
-    // Try making into 7 cards instead trying to use grid system to avoid unreadable data when screen gets small.
+    // For each day in the week, every class that is on that day is display to the user, when
+    // displaying the optimized classes. 
     showOptSch(matrix){
 
         if(matrix == null) return;
@@ -128,6 +110,7 @@ class OptimizeClass extends React.Component {
         return <Row>{userClasses}</Row>;
     }
 
+    // Checks if two classes have a day in common. 
     dayOverlap(daysA, daysB){
 
         for (const [key, value] of Object.entries(DAY_ENUM)){
@@ -138,6 +121,7 @@ class OptimizeClass extends React.Component {
         return false;
     }
 
+    // Check if two classes have times that over lap each other
     timeOverlap(timeA, timeB){
 
         let minInHour = 60;
@@ -166,6 +150,13 @@ class OptimizeClass extends React.Component {
         return false;
     }
 
+    // Optimizes  the class list by giving each class a day value. Then 
+    // sorting the the class list by the day values. Then it adds the 
+    // classes to a final list by checking for day/time conflicts with
+    // classes that are already in the list. If there is no conflict
+    // then the class is added to final list. The algorithm completes when
+    // the size final list the same number as the number classes the user wants,
+    // or there are no more classes to put into the final list.  
     optimizeSchedule(){
         const cList = this.props.classList;
 
@@ -218,11 +209,6 @@ class OptimizeClass extends React.Component {
     }
 
     render() {
-
-       /*  let timeA = {start:{hour: 23, min: 5}, end: {hour: 1, min: 0}}
-        let timeB = {start:{hour: 22, min: 5}, end: {hour: 24, min: 35}}
-        let r = this.timeOverlap(timeA, timeB)
-        console.log("Night to day test result = ", r); */
 
 
         return (<Container>

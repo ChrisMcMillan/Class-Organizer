@@ -1,3 +1,5 @@
+// This file generate random class data for testing.
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }

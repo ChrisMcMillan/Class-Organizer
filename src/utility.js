@@ -1,7 +1,12 @@
+// This file contains data structures and functions that are used in many parts of the program
+
+// Used to create enums related to the week
 export const DAY_ENUM = {monday: 1, tuesday: 2, wednesday: 3,
     thursday: 4, friday: 5, saturday: 6, sunday: 7}
 
 
+
+// Coverts a time value to a string that can be shown to the user
 export function timeToString(time){
     let mid = 12;
     let s = "";
@@ -18,7 +23,7 @@ export function timeToString(time){
     return s;
 }
 
-
+// Capitalizes the first letter in a string
 export function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }

@@ -7,6 +7,8 @@ import Button from 'react-bootstrap/Button';
 
 import {capitalizeFirstLetter, DAY_ENUM } from './utility';
 
+
+// Creates the input for creating class to add to the class list
 class AddClass extends React.Component {
     constructor(props) {
         super(props);
@@ -42,6 +44,8 @@ class AddClass extends React.Component {
       }
 
 
+      // Makes sure the input times are valid by making sure the
+      // times are not the same.
       validateTimeInput(){
 
         const startTime = this.state.classData.times.start;
@@ -60,6 +64,8 @@ class AddClass extends React.Component {
         return output;
       }
 
+      /* Make sure there is at least one day check box checked. A class with no
+      days is invalid. */
       atLeastOneDayCheckBox(){
 
         for (const [key, value] of Object.entries(DAY_ENUM)){
@@ -71,6 +77,7 @@ class AddClass extends React.Component {
         return false;
       }
 
+      // Updates day data for the class that is going to be added
       handleDayCheckBoxChange(event) {
        
         // console.log(event.target.checked);
@@ -85,6 +92,7 @@ class AddClass extends React.Component {
         this.setState({ days: newDays });
       }
 
+      // Updates the class name
       handleClassNameChange(event) {
        
         const cd = this.state.classData;
@@ -92,12 +100,14 @@ class AddClass extends React.Component {
         this.setState({ classData:  cd});
       }
 
+      // Updates the hour data 
       handleClassHourChange(event){
         // console.log(event.target.id);
         // console.log(event.target.value);
 
         const newTime = this.state.classData.times;
 
+        // Checks if the user is updating the start or end time
         if(event.target.id === this.state.startHourInputID){
           newTime.start.hour = event.target.value;
           this.setState({ times: newTime});
@@ -112,9 +122,11 @@ class AddClass extends React.Component {
         }
       }
 
+      // Updates the min date
       handleClassMinChange(event){
         const newTime = this.state.classData.times;
 
+        // Checks if the user is updating the start or end time
         if(event.target.id === this.state.startMinInputID){
           newTime.start.min = event.target.value;
           this.setState({ times: newTime});
@@ -129,6 +141,9 @@ class AddClass extends React.Component {
         }
       }
 
+      // Preforms checks for make sure the class data is valid.
+      // If it is not valid then an error message is display to the user.
+      // If it is valid then the new class data is added to the list.
       handleSubmitClick(event){
         // console.log("handleSubmitClick() being clicked");
        
@@ -186,6 +201,7 @@ class AddClass extends React.Component {
       }
 
 
+      // Covert an hour in military time to a display time 
       hourToString(hour){
 
         if(hour < 1 || hour > 24){
@@ -205,6 +221,7 @@ class AddClass extends React.Component {
         return hourString;
       }
 
+      // Create the hour select dropdown
       createHourInput(id){
         
         let inputID = id + "HourInput";
@@ -232,6 +249,7 @@ class AddClass extends React.Component {
         return input;
       }
 
+      // Creates the min select dropdown 
       createMinInput(id){
         
         let inputID = id + "MinInput";
@@ -263,6 +281,8 @@ class AddClass extends React.Component {
         return input;
       }
 
+
+      // Create the hour and min select drop downs for the start and end times
       createTimeInput(id){
 
 
@@ -284,6 +304,7 @@ class AddClass extends React.Component {
         let dayInputCols = [];
         let i = 0;
 
+        // Creates the day selection 
         for (const [key, value] of Object.entries(this.state.classData.days)) {
             // console.log(`${key}: ${value}`);
 
@@ -303,6 +324,7 @@ class AddClass extends React.Component {
         let dayInput = <Row> {dayInputCols} </Row>
 
         return(
+            // Creates the form for adding a class. 
             <Container>
             <h3 className='my-5'>Add Class</h3> 
             <Form validated={this.state.validated} noValidate onSubmit={this.handleSubmitClick}>

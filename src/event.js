@@ -12,6 +12,7 @@ class Event extends React.Component {
     }
   
     
+    // Displays all the days the class is on.
     displayEventDays(days){
       let e = "";
       for (const [key, value] of Object.entries(days)) {
@@ -22,6 +23,8 @@ class Event extends React.Component {
       return e;
     }
     
+
+    // Displays the times the classes takes place
     displayTimes(times){
       let t = "";
       let s = "";
@@ -40,6 +43,7 @@ class Event extends React.Component {
 
       let removeButton = null;
 
+      // Controls if the user can remove the class from the class list or not. 
       if(this.props.showRemoveButton === true) removeButton = <Button onClick={() => this.props.removeClass(this.props.index)} variant="danger">Remove</Button>;
       else removeButton = null;
 
